@@ -17,32 +17,95 @@ let labyrinth = [
   [0, 1, 0, 0, 0, 1, 0],
 ];
 
+// function testAllCase(array) {
+//   for (let i = 0; i < array.length; i++) {
+//     for (let j = 0; j < array[i].length; j++) {
+//       if (array[i][j] === "G") {
+//         console.log(
+//           "La matrice de la case " + array[i][j] + " est [" + i + "][" + j + "]"
+//         );
+//         return array[i][j];
+//       }
+//     }
+//   }
+// }
+// let test = testAllCase(labyrinth);
+// console.log("test", test);
+
 function monAlgoNul(array) {
   console.log("monAlgoNul -> array", array);
-  let start = array[0][0];
-  let positionActuel = start;
-  console.log("monAlgoNul -> positionActuel", positionActuel);
-  console.log("indexof ", array.indexOf(positionActuel))
-  while (positionActuel !== "G") {
+  let i = 0;
+  let j = 0;
+  let carrefour = [];
+
+  let tour = 0;
+
+  while (array[i][j] !== "G") {
+    tour++;
     let nbDeDirectionPosible = 0;
 
-    if (array[0][+ 1] === 0) {
+    console.log(
+      "La matrice de la case " + array[i][j] + " est [i = " + i + "][j = " + j + "]"
+    );
+
+    console.log(typeof i ," i = ", i )
+
+    if (i < array.length - 1 && (array[i + 1][j] === 0 || array[i + 1][j] === "G")) {
       nbDeDirectionPosible++;
     }
-    if (positionActuel[x + 1][y] === 0) {
+    console.log("monAlgoNul -> nbDeDirectionPosible", nbDeDirectionPosible);
+    if (j < array[i].length - 1 && (array[i][j + 1] === 0|| array[i][j + 1] === "G")) {
       nbDeDirectionPosible++;
     }
-    if (positionActuel[x][y - 1] === 0) {
+    if (i > 0 && (array[i - 1][j] === 0 || array[i - 1][j] === "G")) {
       nbDeDirectionPosible++;
     }
-    if (positionActuel[x - 1][y] === 0) {
+    if (j > 0 && (array[i][j - 1] === 0 || array[i][j - 1] === "G")) {
       nbDeDirectionPosible++;
     }
 
     console.log("monAlgoNul -> nbDeDirectionPosible", nbDeDirectionPosible);
 
-    return;
+    if (nbDeDirectionPosible > 1) {
+      carrefour.push(i, j);
+      console.log("monAlgoNul -> carrefour", carrefour);
+    }
+    if (i < array.length - 1 && (array[i + 1][j] === 0 || array[i + 1][j] === "G")) {
+      array[i][j] = "x";
+      i++;
+    } else {
+      if (j < array[i].length - 1 && (array[i][j + 1] === 0 || array[i][j + 1] === "G")) {
+        array[i][j] = "x";
+        j++;
+      } else {
+        if (i > 0 && (array[i - 1][j] === 0 || array[i - 1][j] === "G")) {
+          array[i][j] = "x";
+          i--;
+        } else {
+          if (j > 0 && (array[i][j - 1] === 0 || array[i][j - 1] === "G")) {
+            array[i][j] = "x";
+            j--;
+          } else {
+            array[i][j] = "x";
+            // si je peux pas me deplacer je reviens a ma dernière posotion sauvegarder et je la supprime
+            let lastValue = carrefour.length - 1;
+            i = carrefour[lastValue - 1];
+            j = carrefour[lastValue];
+            carrefour.pop(); // Suppression de la sauvegarde position
+            carrefour.pop()
+            console.table("carrefour",carrefour)
+          }
+        }
+      }
+    }
+
+    console.table(array);
+
+    if (tour === 40) {
+      return;
+    }
   }
+  console.log("Touvé, la sortie etait en ", i , j )
 }
 
 monAlgoNul(labyrinth);
