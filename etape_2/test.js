@@ -130,23 +130,9 @@ function monAlgoNul(array) {
 
 // function iterative a faire
 let carrefour = [];
+let tour = 0;
 function labyrinthProfondeurRecursif(array, i, j, carrefour) {
-  console.table("monAlgoNul -> array", array);
-  console.table("carrefour", carrefour);
-
   let nbDeDirectionPosible = 0;
-
-  console.log(
-    "La matrice de la case " +
-      array[i][j] +
-      " est [i = " +
-      i +
-      "][j = " +
-      j +
-      "]"
-  );
-
-  console.log(typeof i, " i = ", i);
 
   if (
     i < array.length - 1 &&
@@ -158,60 +144,74 @@ function labyrinthProfondeurRecursif(array, i, j, carrefour) {
     j < array[i].length - 1 &&
     (array[i][j + 1] === 0 || array[i][j + 1] === "G")
   ) {
+    if (nbDeDirectionPosible > 0) {
+      carrefour.push(i, j + 1);
+    }
     nbDeDirectionPosible++;
   }
   if (i > 0 && (array[i - 1][j] === 0 || array[i - 1][j] === "G")) {
+    if (nbDeDirectionPosible > 0) {
+      carrefour.push(i - 1, j);
+    }
     nbDeDirectionPosible++;
   }
   if (j > 0 && (array[i][j - 1] === 0 || array[i][j - 1] === "G")) {
+    if (nbDeDirectionPosible > 0) {
+      carrefour.push(i, j - 1);
+    }
     nbDeDirectionPosible++;
   }
 
-  console.log("monAlgoNul -> nbDeDirectionPosible fin" , nbDeDirectionPosible);
+  // if (nbDeDirectionPosible > 1) {
+  //   carrefour.push(i, j);
+  // }
 
-  if (nbDeDirectionPosible > 1) {
-    carrefour.push(i, j);
-    console.log("monAlgoNul -> carrefour", carrefour);
-  }
   if (
     i < array.length - 1 &&
     (array[i + 1][j] === 0 || array[i + 1][j] === "G")
   ) {
-    array[i][j] = "x";
+    tour++;
+    array[i][j] = `deplacement: ${tour}`;
     i++;
   } else {
     if (
       j < array[i].length - 1 &&
       (array[i][j + 1] === 0 || array[i][j + 1] === "G")
     ) {
-      array[i][j] = "x";
+      tour++;
+      array[i][j] = `deplacement: ${tour}`;
       j++;
     } else {
       if (i > 0 && (array[i - 1][j] === 0 || array[i - 1][j] === "G")) {
-        array[i][j] = "x";
+        tour++;
+        array[i][j] = `deplacement: ${tour}`;
         i--;
       } else {
         if (j > 0 && (array[i][j - 1] === 0 || array[i][j - 1] === "G")) {
-          array[i][j] = "x";
+          tour++;
+          array[i][j] = `deplacement: ${tour}`;
           j--;
         } else {
-          array[i][j] = "x";
+          tour++;
+          array[i][j] = `deplacement: ${tour}`;
           // si je peux pas me deplacer je reviens a ma dernière posotion sauvegarder et je la supprime
           let lastValue = carrefour.length - 1;
           i = carrefour[lastValue - 1];
           j = carrefour[lastValue];
           carrefour.pop(); // Suppression de la sauvegarde position
           carrefour.pop();
-          console.table("carrefour", carrefour);
         }
       }
     }
   }
 
-  console.table(array);
-
   if (array[i][j] === "G") {
-    console.log("Sortie en ", i, j)
+    console.log(
+      `Sortie en i = ${i} j = ${j}. J'ai trouvé la solution au ${
+        tour + 1
+      } eme essaie.`
+    );
+    console.table(array);
     return;
   }
 
